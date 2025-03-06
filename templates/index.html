@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommendation</title>
+
+    <!-- jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <style>
+        /* Background with Linear Gradient */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #2b5876, #4e4376);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        button {
+            background: #ff6f61;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ff3b30;
+        }
+
+        /* Recommendation Container */
+        .recommendation-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendation-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+        }
+
+        .recommendation-card:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #ffdf00;
+            margin-bottom: 5px;
+        }
+
+        .product-reviews {
+            font-size: 0.9rem;
+        }
+
+        /* Autocomplete Suggestions */
+        .ui-autocomplete {
+            background: #fff;
+            border-radius: 5px;
+            padding: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .ui-menu-item {
+            padding: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .ui-menu-item:hover {
+            background: #ff6f61;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Product Recommendation System</h2>
+
+    <form method="POST">
+        <input type="text" id="item_name" name="item_name" placeholder="Search for a product..." autocomplete="off">
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    <div class="recommendation-container">
+        {% for rec in recommendations %}
+            <div class="recommendation-card">
+                <img class="product-image" src="{{ rec.image }}" alt="{{ rec.name }}">
+                <div class="product-name">{{ rec.name }}</div>
+                <div class="product-reviews">Reviews: {{ rec.reviews }}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#item_name").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "/autocomplete",
+                        type: "GET",
+                        data: { q: request.term },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                minLength: 2
+            });
+        });
+    </script>
+
+</body>
+</html>
