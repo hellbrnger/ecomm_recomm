@@ -6,23 +6,23 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 
-# Load Data
+
 data_path = "data/marketing_sample_for_walmart_com-walmart_com_product_review__20200701_20201231__5k_data.tsv"
 data = pd.read_csv(data_path, sep="\t")
 
-# Preprocessing
+
 data = data[['Uniq Id', 'Product Id', 'Product Rating', 'Product Reviews Count', 'Product Name', 'Product Description',
              'Product Image Url']]
 data.columns = ['id', 'prod_id', 'rating', 'reviews', 'name', 'description', 'image']
 data.fillna("", inplace=True)
 
-# TF-IDF for Content-Based Recommendation
+
 tfidf_vectorizer = TfidfVectorizer(stop_words='english')
 tfidf_matrix = tfidf_vectorizer.fit_transform(data['description'])
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
 
-# Recommendation Function
+
 def content_based_recommendation(item_name, top_n=10):
     if item_name not in data['name'].values:
         return []
