@@ -197,7 +197,7 @@ def collaborative_based_recommendation(req_data, target_user_id, top_n=10):
             if len(recommended_items) < top_n:
                 recommended_items.add(item)
             else:
-                break  # Stop once we have enough recommendations
+                break  
         if len(recommended_items) >= top_n:
             break
 
@@ -228,10 +228,9 @@ import pandas as pd
 def get_recommendations(query, df):
     query = query.lower()
 
-    # Find similar products (basic logic, modify as needed)
     results = df[df['name'].str.lower().str.contains(query, na=False)]
 
-    recommendations = results['name'].unique().tolist()[:5]  # Return top 5 matches
+    recommendations = results['name'].unique().tolist()[:5]  
     return recommendations if recommendations else ["No recommendations found"]
 
 
